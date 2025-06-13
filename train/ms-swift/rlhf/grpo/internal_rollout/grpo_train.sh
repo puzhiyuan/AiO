@@ -1,0 +1,46 @@
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
+NPROC_PER_NODE=8 \
+swift rlhf \
+    --rlhf_type grpo \
+    --model /data/models/huggingface/Qwen2.5-7B-Instruct \
+    --train_type lora \
+    --dataset AI-MO/NuminaMath-TIR#10000 \
+    --torch_dtype bfloat16 \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 2 \
+    --per_device_eval_batch_size 2 \
+    --gradient_accumulation_steps 4 \
+    --eval_steps 50 \
+    --save_steps 100 \
+    --learning_rate 1e-6 \
+    --save_total_limit 2 \
+    --logging_steps 1 \
+    --warmup_ratio 0.05 \
+    --dataloader_num_workers 4 \
+    --max_completion_length 2048 \
+    --reward_funcs accuracy format \
+    --reward_weights 1 0.1 \
+    --num_generations 16 \
+    --system /root/workspace/swift/ms-swift/examples/train/grpo/prompt.txt \
+    --use_vllm true \
+    --vllm_gpu_memory_utilization 0.5 \
+    --vllm_max_model_len 4096 \
+    --deepspeed zero2 \
+    --temperature 1.0 \
+    --top_p 1.0 \
+    --top_k 80 \
+    --log_completions true \
+    --num_infer_workers 8 \
+    --tensor_parallel_size 4 \
+    --move_model_batches 16 \
+    --offload_optimizer true \
+    --offload_model true \
+    --gc_collect_after_offload true \
+    --sleep_level 1 \
+    --max_steps 50 \
+    --output_dir output \
+    --report_to swanlab \
+    --swanlab_project swift_rlhf_grpo \
+    --swanlab_token token \
+    --swanlab_exp_name zero2_Qwen3-8B \
+    --swanlab_mode cloud \
